@@ -118,7 +118,6 @@ Select destinations (comma-separated): 1,2
 ---
 
 ## Author
-[Your Name]  
-[Your Contact Information]  
-[Your GitHub/Website]
+[Hariharan R S]  
+[harisaravanan08112001@gmail.com] 
 
