@@ -118,6 +118,6 @@ Select destinations (comma-separated): 1,2
 ---
 
 ## Author
-Hariharan R S
-harisaravanan08112001@gmail.com
+[Hariharan R S]
+[harisaravanan08112001@gmail.com]
 
