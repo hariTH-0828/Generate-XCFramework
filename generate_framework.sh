@@ -12,7 +12,9 @@ SCHEMES=""
 ARCHIVE_PATH="./build"
 DESTINATION="generic/platform=iOS
 generic/platform=iOS Simulator
-generic/platform=macOS,variant=Mac Catalyst"
+generic/platform=macOS,varient=Designed for iPad
+generic/platform=macOS,variant=Mac Catalyst
+generic/platform=macOS"
 SELECTED_DESTINATIONS=""
 SELECTED_SCHEME=""
 
@@ -236,10 +238,17 @@ for destination in "${SELECTED_DESTINATIONS[@]}"; do
             create_archive "generic/platform=iOS Simulator" "-simulator"
             ;;
         "generic/platform=macOS,variant=Mac Catalyst")
-            create_archive "generic/platform=macOS,variant=Mac Catalyst" "-mac"
+            create_archive "generic/platform=macOS,variant=Mac Catalyst" "-mac-catalyst"
+            ;;
+        "generic/platform=macOS,varient=Designed for iPad")
+            create_archive "generic/platform=macOS,varient=Designed for iPad" "-mac-ipad"
+            ;;
+        "generic/platform=macOS")
+            create_archive "generic/platform=macOS" "-mac"
             ;;
         *)
             echo "❌ Invalid destination"
+            exit 1
             ;;
     esac
 done
@@ -272,10 +281,17 @@ function create_framework() {
                 args+=("-framework" "$ARCHIVE_PATH/${SELECTED_SCHEME}-simulator.xcarchive/Products/Library/Frameworks/${SELECTED_SCHEME}.framework")
                 ;;
             "generic/platform=macOS,variant=Mac Catalyst")
+                args+=("-framework" "$ARCHIVE_PATH/${SELECTED_SCHEME}-mac-catalyst.xcarchive/Products/Library/Frameworks/${SELECTED_SCHEME}.framework")
+                ;;
+            "generic/platform=macOS,varient=Designed for iPad")
+                args+=("-framework" "$ARCHIVE_PATH/${SELECTED_SCHEME}-mac-ipad.xcarchive/Products/Library/Frameworks/${SELECTED_SCHEME}.framework")
+                ;;
+            "generic/platform=macOS")
                 args+=("-framework" "$ARCHIVE_PATH/${SELECTED_SCHEME}-mac.xcarchive/Products/Library/Frameworks/${SELECTED_SCHEME}.framework")
                 ;;
             *)
                 echo "❌ Invalid destination"
+                exit 1
                 ;;
         esac
     done
