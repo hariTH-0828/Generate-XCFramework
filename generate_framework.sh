@@ -10,11 +10,11 @@ TARGETS=""
 CONFIGURATIONS="Release"
 SCHEMES=""
 ARCHIVE_PATH="./build"
-DESTINATION="generic/platform=iOS
-generic/platform=iOS Simulator
-generic/platform=macOS,varient=Designed for iPad
-generic/platform=macOS,variant=Mac Catalyst
-generic/platform=macOS"
+DESTINATION="iPhone
+iPhone Simulator
+macOS (Designed for iPad)
+macOS (Mac Catalyst)
+macOS"
 SELECTED_DESTINATIONS=""
 SELECTED_SCHEME=""
 
@@ -231,19 +231,19 @@ function create_archive() {
 
 for destination in "${SELECTED_DESTINATIONS[@]}"; do
     case $destination in
-        "generic/platform=iOS")
+        "iPhone")
             create_archive "generic/platform=iOS" ""
             ;;
-        "generic/platform=iOS Simulator")
+        "iPhone Simulator")
             create_archive "generic/platform=iOS Simulator" "-simulator"
             ;;
-        "generic/platform=macOS,variant=Mac Catalyst")
+        "macOS (Mac Catalyst)")
             create_archive "generic/platform=macOS,variant=Mac Catalyst" "-mac-catalyst"
             ;;
-        "generic/platform=macOS,varient=Designed for iPad")
+        "macOS (Designed for iPad)")
             create_archive "generic/platform=macOS,varient=Designed for iPad" "-mac-ipad"
             ;;
-        "generic/platform=macOS")
+        "macOS")
             create_archive "generic/platform=macOS" "-mac"
             ;;
         *)
@@ -274,19 +274,19 @@ function create_framework() {
     args=()
     for destination in "${SELECTED_DESTINATIONS[@]}"; do
         case $destination in
-            "generic/platform=iOS")
+            "iPhone")
                 args+=("-framework" "$ARCHIVE_PATH/${SELECTED_SCHEME}.xcarchive/Products/Library/Frameworks/${SELECTED_SCHEME}.framework")
                 ;;
-            "generic/platform=iOS Simulator")
+            "iPhone Simulator")
                 args+=("-framework" "$ARCHIVE_PATH/${SELECTED_SCHEME}-simulator.xcarchive/Products/Library/Frameworks/${SELECTED_SCHEME}.framework")
                 ;;
-            "generic/platform=macOS,variant=Mac Catalyst")
+            "macOS (Mac Catalyst)")
                 args+=("-framework" "$ARCHIVE_PATH/${SELECTED_SCHEME}-mac-catalyst.xcarchive/Products/Library/Frameworks/${SELECTED_SCHEME}.framework")
                 ;;
-            "generic/platform=macOS,varient=Designed for iPad")
+            "macOS (Designed for iPad)")
                 args+=("-framework" "$ARCHIVE_PATH/${SELECTED_SCHEME}-mac-ipad.xcarchive/Products/Library/Frameworks/${SELECTED_SCHEME}.framework")
                 ;;
-            "generic/platform=macOS")
+            "macOS")
                 args+=("-framework" "$ARCHIVE_PATH/${SELECTED_SCHEME}-mac.xcarchive/Products/Library/Frameworks/${SELECTED_SCHEME}.framework")
                 ;;
             *)
