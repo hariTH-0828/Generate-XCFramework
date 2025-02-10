@@ -1,7 +1,7 @@
 # Generate Framework Script Documentation
 
 ## Overview
-`generate_framework.sh` is a Bash script designed to automate the process of building and archiving an Xcode project for multiple platforms (iOS, iOS Simulator, and macOS Catalyst). It also generates an XCFramework from the archived builds.
+`generate_framework.sh` is a Bash script designed to automate the process of building and archiving an Xcode project for multiple platforms (iOS, iOS Simulator, macOS, macOS (Designed for iPad) and macOS Catalyst). It also generates an XCFramework from the archived builds.
 
 ---
 
@@ -48,6 +48,8 @@ If no project path is provided, the script defaults to the current directory (`.
   - `generic/platform=iOS`
   - `generic/platform=iOS Simulator`
   - `generic/platform=macOS,variant=Mac Catalyst`
+  - `generic/platform=macOS,varient=Designed for iPad`
+  - `generic/platform=macOS`
 - Allows the user to select one or multiple destinations.
 
 ### 5. **Cleaning the Build Folder**
@@ -78,6 +80,8 @@ Select a scheme: 2
 1. generic/platform=iOS
 2. generic/platform=iOS Simulator
 3. generic/platform=macOS,variant=Mac Catalyst
+4. generic/platform=macOS,varient=Designed for iPad
+5. generic/platform=macOS
 Select destinations (comma-separated): 1,2
 ✅ Selected Destinations: iOS, iOS Simulator
 🧹 Cleaning build folder...
@@ -105,7 +109,7 @@ Select destinations (comma-separated): 1,2
 ---
 
 ## Notes
-- The script assumes that the project supports **generic/platform=iOS**, **iOS Simulator**, and **Mac Catalyst**.
+- The script assumes that the project supports **generic/platform=iOS**, **iOS Simulator**, **macOS**, **macOS (Designed for iPad)** and **Mac Catalyst**.
 - The script should be run in a terminal with the necessary permissions (`chmod +x generate_framework.sh` before execution).
 
 ---
