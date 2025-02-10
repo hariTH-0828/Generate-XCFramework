@@ -70,13 +70,11 @@ echo ""
 function extract_content() {
     local section_name=$1
     local capture=0
-    local first_line=1
     
     while IFS= read -r line; do
         # Check for section start
         if [[ $line == *"$section_name:"* ]]; then
             capture=1
-            first_line=1
             continue
         fi
         
@@ -93,11 +91,6 @@ function extract_content() {
             
             # Skip empty lines
             if [[ -n "$trimmed_line" ]]; then
-                # Skip the first content line as it's usually empty
-                if [[ $first_line -eq 1 ]]; then
-                    first_line=0
-                    continue
-                fi
                 echo "$trimmed_line"
             fi
         fi
@@ -133,11 +126,11 @@ IFS=$'\n' read -r -d '' -a scheme_array <<< "$SCHEMES"
 
 # Display the schemes with numbers
 echo "📌 Available Schemes:"
-echo ""
 for i in "${!scheme_array[@]}"; do
     echo "$((i+1)). ${scheme_array[$i]}"
 done
 
+echo ""
 # Ask user to select a scheme
 read -p "Select a scheme: " scheme_index
 
@@ -165,11 +158,11 @@ IFS=$'\n' read -r -d '' -a destination_array <<< "$DESTINATION"
 
 # Display the destinations with numbers
 echo "📌 Available Destinations:"
-echo ""
 for i in "${!destination_array[@]}"; do
-    echo "$((i+1)). ${destination_array[i]}"
+    echo "$((i+1)). ${destination_array[$i]}"
 done
 
+echo ""
 # Read user selection
 read -p "Select destinations: " destination_index
 
