@@ -217,8 +217,8 @@ function create_archive() {
         -scheme "$SELECTED_SCHEME" \
         -destination "$destination" \
         -configuration Release \
-        -archivePath "$ARCHIVE_PATH/${SELECTED_SCHEME}${archive_suffix}"
-        SKIP_INSTALL=NO
+        -archivePath "$ARCHIVE_PATH/${SELECTED_SCHEME}${archive_suffix}" \
+        SKIP_INSTALL=NO \
         BUILD_LIBRARY_FOR_DISTRIBUTION=YES
 }
 
