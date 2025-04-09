@@ -18,20 +18,22 @@ macOS"
 SELECTED_DESTINATIONS=""
 SELECTED_SCHEME=""
 
+# Add a variable to track project type
+PROJECT_TYPE=""
+PROJECT_FILE=""
+
 # Function to display usage
 function show_usage() {
-    echo "Usage: $0 -p <project_path> -d <destination>"
-    echo "  -p: Project path (required)"
-    echo "  -d: Destination (required)"
+    echo "Usage: $0 [-p <project_path>] [-h]"
+    echo "  -p: Project path (optional, defaults to current directory)"
+    echo "  -h: Show this help message"
     exit 1
 }
 
 # Function to validate required params
 function validate_params() {
-    if [ -z "$PROJECT_PATH" ]; then
-        echo -e "Error: Project path is required"
-        show_usage
-    fi
+    # All parameters are now optional with defaults
+    return 0
 }
 
 function set_default_path() {
@@ -41,10 +43,13 @@ function set_default_path() {
 }
 
 # Parse command line argument
-while getopts "p:" opt; do
+while getopts "p:h" opt; do
     case $opt in
         p)
             PROJECT_PATH=$OPTARG
+            ;;
+        h)
+            show_usage
             ;;
         \?)
             echo "Invalid option: -$OPTARG" >&2
@@ -62,6 +67,30 @@ validate_params
 
 echo "📂 Project path: $PROJECT_PATH"
 echo ""
+
+# ------------------------------------------------------------------------------------------------------------- #
+# ---------------------------------- Determine project type (workspace or project) ---------------------------- #
+# ------------------------------------------------------------------------------------------------------------- #
+
+# Change directory to the project path
+cd "$PROJECT_PATH"
+
+# Check if we're dealing with a workspace or project
+WORKSPACE_COUNT=$(find . -maxdepth 1 -name "*.xcworkspace" | wc -l)
+PROJECT_COUNT=$(find . -maxdepth 1 -name "*.xcodeproj" | wc -l)
+
+if [ $WORKSPACE_COUNT -gt 0 ]; then
+    PROJECT_TYPE="workspace"
+    PROJECT_FILE=$(find . -maxdepth 1 -name "*.xcworkspace" | head -n 1 | sed 's|^\./||')
+    echo "📂 Found workspace: $PROJECT_FILE"
+elif [ $PROJECT_COUNT -gt 0 ]; then
+    PROJECT_TYPE="project"
+    PROJECT_FILE=$(find . -maxdepth 1 -name "*.xcodeproj" | head -n 1 | sed 's|^\./||')
+    echo "📂 Found project: $PROJECT_FILE"
+else
+    echo "❌ Error: No .xcworkspace or .xcodeproj found in the specified directory"
+    exit 1
+fi
 
 # ------------------------------------------------------------------------------------------------------------- #
 # --------------------------------------------- Load scheme from the project ---------------------------------- #
@@ -97,15 +126,17 @@ function extract_content() {
     done
 }
 
-# Change directory to the project path
-cd "$PROJECT_PATH"
-
 # Run xcodebuild -list and store the output
 echo "📝 Fetching Xcode project information..."
 echo ""
-xcodebuild_output=$(xcodebuild -list 2>/dev/null)
 
-# Check if xcodebuild was successful, $? -> exit status if the last command executed successfully
+if [ "$PROJECT_TYPE" = "workspace" ]; then
+    xcodebuild_output=$(xcodebuild -workspace "$PROJECT_FILE" -list 2>/dev/null)
+else
+    xcodebuild_output=$(xcodebuild -project "$PROJECT_FILE" -list 2>/dev/null)
+fi
+
+# Check if xcodebuild was successful
 if [ $? -ne 0 ]; then
     echo "❌ Error: Failed to run xcodebuild -list"
     echo "Make sure you're in a directory with an Xcode project or workspace"
@@ -186,7 +217,11 @@ echo ""
 echo "🧹 Cleaning build folder..."
 echo ""
 
-xcodebuild clean -scheme "$SELECTED_SCHEME"
+if [ "$PROJECT_TYPE" = "workspace" ]; then
+    xcodebuild clean -workspace "$PROJECT_FILE" -scheme "$SELECTED_SCHEME"
+else
+    xcodebuild clean -project "$PROJECT_FILE" -scheme "$SELECTED_SCHEME"
+fi
 
 if [ $? -ne 0 ]; then
     echo ""
@@ -196,7 +231,6 @@ fi
 
 echo "✅ BUILD CLEAN SUCCEED"
 echo ""
-
 
 #Check if the build folder is exist remove the existing folder
 if [ -d $ARCHIVE_PATH ]; then
@@ -213,13 +247,25 @@ function create_archive() {
     echo "📦 Archiving for $destination..."
     echo ""
 
-    xcodebuild archive \
-        -scheme "$SELECTED_SCHEME" \
-        -destination "$destination" \
-        -configuration Release \
-        -archivePath "$ARCHIVE_PATH/${SELECTED_SCHEME}${archive_suffix}" \
-        SKIP_INSTALL=NO \
-        BUILD_LIBRARY_FOR_DISTRIBUTION=YES
+    if [ "$PROJECT_TYPE" = "workspace" ]; then
+        xcodebuild archive \
+            -workspace "$PROJECT_FILE" \
+            -scheme "$SELECTED_SCHEME" \
+            -destination "$destination" \
+            -configuration Release \
+            -archivePath "$ARCHIVE_PATH/${SELECTED_SCHEME}${archive_suffix}" \
+            SKIP_INSTALL=NO \
+            BUILD_LIBRARY_FOR_DISTRIBUTION=YES
+    else
+        xcodebuild archive \
+            -project "$PROJECT_FILE" \
+            -scheme "$SELECTED_SCHEME" \
+            -destination "$destination" \
+            -configuration Release \
+            -archivePath "$ARCHIVE_PATH/${SELECTED_SCHEME}${archive_suffix}" \
+            SKIP_INSTALL=NO \
+            BUILD_LIBRARY_FOR_DISTRIBUTION=YES
+    fi
 }
 
 for destination in "${SELECTED_DESTINATIONS[@]}"; do
