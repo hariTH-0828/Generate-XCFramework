@@ -258,7 +258,6 @@ function create_archive() {
             BUILD_LIBRARY_FOR_DISTRIBUTION=YES
     else
         xcodebuild archive \
-            -project "$PROJECT_FILE" \
             -scheme "$SELECTED_SCHEME" \
             -destination "$destination" \
             -configuration Release \

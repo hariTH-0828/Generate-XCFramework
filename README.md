@@ -1,13 +1,13 @@
 # Generate Framework Script Documentation
 
 ## Overview
-`generate_framework.sh` is a Bash script designed to automate the process of building and archiving an Xcode project for multiple platforms (iOS, iOS Simulator, macOS, macOS (Designed for iPad) and macOS Catalyst). It also generates an XCFramework from the archived builds.
+`zcocoframe.sh` is a Bash script designed to automate the process of building and archiving an Xcode project for multiple platforms (iOS, iOS Simulator, macOS, macOS (Designed for iPad) and macOS Catalyst). It also generates an XCFramework from the archived builds.
 
 ---
 
 ## Usage
 ```sh
-./generate_framework.sh -p <project_path>
+./zcocoframe.sh -p <project_path>
 ```
 
 ### Parameters
@@ -65,7 +65,7 @@ If no project path is provided, the script defaults to the current directory (`.
 
 ## Example Execution
 ```sh
-./generate_framework.sh -p /Users/username/MyXcodeProject
+./zcocoframe.sh -p /Users/username/MyXcodeProject
 ```
 
 ### Sample Output
@@ -110,7 +110,7 @@ Select destinations (comma-separated): 1,2
 
 ## Notes
 - The script assumes that the project supports **generic/platform=iOS**, **iOS Simulator**, **macOS**, **macOS (Designed for iPad)** and **Mac Catalyst**.
-- The script should be run in a terminal with the necessary permissions (`chmod +x generate_framework.sh` before execution).
+- The script should be run in a terminal with the necessary permissions (`chmod +x zcocoframe.sh` before execution).
 
 ---
 
