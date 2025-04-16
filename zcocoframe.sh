@@ -1,6 +1,11 @@
 #!/bin/bash
 
 # ------------------------------------------------------------------------------------------------------------- #
+# ----------------------------------------------- ZCocoFrame.sh ----------------------------------------------- #
+# ------------------------------------------------------------------------------------------------------------- #
+VERSION=1.0.0
+
+# ------------------------------------------------------------------------------------------------------------- #
 # ----------------------------------------- Reading Xcode project path ---------------------------------------- #
 # ------------------------------------------------------------------------------------------------------------- #
 
@@ -22,12 +27,21 @@ SELECTED_SCHEME=""
 PROJECT_TYPE=""
 PROJECT_FILE=""
 
+# Function to display version information
+function show_version() {
+    echo "Version: $VERSION"
+    echo "Author: Hariharan R S"
+    echo "Description: A script to automate the process of creating XCFrameworks from Xcode projects."
+    exit 0
+}
+
 # Function to display usage
 function show_usage() {
-    echo "Usage: $0 [-p <project_path>] [-h]"
+    echo "Usage: $0 [-p <project_path>] [-v] [-h]"
     echo "  -p: Project path (optional, defaults to current directory)"
+    echo "  -v: Show version information"
     echo "  -h: Show this help message"
-    exit 1
+    exit 0
 }
 
 # Function to validate required params
@@ -43,10 +57,13 @@ function set_default_path() {
 }
 
 # Parse command line argument
-while getopts "p:h" opt; do
+while getopts "p:vh" opt; do
     case $opt in
         p)
             PROJECT_PATH=$OPTARG
+            ;;
+        v)
+            show_version
             ;;
         h)
             show_usage
