@@ -14,6 +14,8 @@
 | Parameter | Description |
 |-----------|-------------|
 | `-p` | Specifies the path to the Xcode project. This is required. |
+| `-v` | Displays the current version of the script. |
+| `-h` | Shows help information about how to use the script. |
 
 If no project path is provided, the script defaults to the current directory (`./`).
 
